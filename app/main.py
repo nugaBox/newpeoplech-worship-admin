@@ -12,7 +12,8 @@ from app.routers import bulletin, favorites, outlines, server, settings
 from app.server_control import mark_server_started
 
 ROOT_DIR = Path(__file__).resolve().parent.parent
-FAVICON_SVG = ROOT_DIR / "static" / "images" / "favicon" / "favicon.svg"
+FAVICON_DIR = ROOT_DIR / "static" / "images" / "favicon"
+FAVICON_ICO = FAVICON_DIR / "favicon.ico"
 
 
 @asynccontextmanager
@@ -71,7 +72,7 @@ async def settings_redirect() -> RedirectResponse:
 
 @app.get("/favicon.ico", include_in_schema=False)
 async def favicon() -> FileResponse:
-    return FileResponse(FAVICON_SVG, media_type="image/svg+xml")
+    return FileResponse(FAVICON_ICO, media_type="image/x-icon")
 
 
 @app.get("/health")
@@ -90,6 +91,7 @@ async def control_page() -> HTMLResponse:
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#10A37F">
   <title>서버 제어 — 예배 관리</title>
+  <link rel="icon" href="/static/images/favicon/favicon.ico" sizes="any">
   <link rel="icon" href="/static/images/favicon/favicon.svg" type="image/svg+xml">
   <style>
     body { font-family: system-ui, sans-serif; max-width: 480px; margin: 48px auto; padding: 0 16px; }
