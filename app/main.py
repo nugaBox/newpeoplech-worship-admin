@@ -4,7 +4,7 @@ from contextlib import asynccontextmanager
 from pathlib import Path
 
 from fastapi import FastAPI, Request
-from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
@@ -12,6 +12,7 @@ from app.routers import bulletin, favorites, outlines, server, settings
 from app.server_control import mark_server_started
 
 ROOT_DIR = Path(__file__).resolve().parent.parent
+FAVICON_SVG = ROOT_DIR / "static" / "images" / "favicon" / "favicon.svg"
 
 
 @asynccontextmanager
@@ -68,6 +69,11 @@ async def settings_redirect() -> RedirectResponse:
     return RedirectResponse(url="/", status_code=302)
 
 
+@app.get("/favicon.ico", include_in_schema=False)
+async def favicon() -> FileResponse:
+    return FileResponse(FAVICON_SVG, media_type="image/svg+xml")
+
+
 @app.get("/health")
 async def health() -> dict[str, str]:
     return {"status": "ok", "version": app.version}
@@ -82,7 +88,9 @@ async def control_page() -> HTMLResponse:
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#10A37F">
   <title>서버 제어 — 예배 관리</title>
+  <link rel="icon" href="/static/images/favicon/favicon.svg" type="image/svg+xml">
   <style>
     body { font-family: system-ui, sans-serif; max-width: 480px; margin: 48px auto; padding: 0 16px; }
     h1 { font-size: 1.25rem; }

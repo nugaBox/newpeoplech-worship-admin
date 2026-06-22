@@ -1,0 +1,16 @@
+{
+  "name": "광주새백성교회 예배 관리",
+  "short_name": "예배 관리",
+  "icons": [
+    {
+      "src": "/static/images/favicon/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "theme_color": "#10A37F",
+  "background_color": "#F7F7F8",
+  "display": "standalone",
+  "start_url": "/"
+}
