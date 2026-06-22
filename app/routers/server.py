@@ -2,7 +2,7 @@
 
 from pydantic import BaseModel
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Request
 
 from app.server_control import get_status_payload, schedule_restart, schedule_stop
 
@@ -30,8 +30,8 @@ class ServerStopResponse(BaseModel):
 
 
 @router.get("/status", response_model=ServerStatusResponse)
-async def server_status() -> ServerStatusResponse:
-    return ServerStatusResponse(**get_status_payload())
+async def server_status(request: Request) -> ServerStatusResponse:
+    return ServerStatusResponse(**get_status_payload(request))
 
 
 @router.post("/restart", response_model=ServerRestartResponse)

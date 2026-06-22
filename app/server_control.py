@@ -9,8 +9,14 @@ import threading
 import time
 from datetime import datetime, timezone
 from pathlib import Path
+from typing import TYPE_CHECKING
 
+from app.config import settings as app_settings
+from app.http_utils import resolve_public_url
 from app.runtime_settings import RuntimeSettings, load_runtime_settings
+
+if TYPE_CHECKING:
+    from fastapi import Request
 
 ROOT_DIR = Path(__file__).resolve().parent.parent
 RESTART_HELPER = ROOT_DIR / "scripts" / "restart_helper.py"
@@ -27,14 +33,19 @@ def get_uptime_seconds() -> int:
     return int((datetime.now(timezone.utc) - _server_started_at).total_seconds())
 
 
-def get_status_payload() -> dict:
+def get_status_payload(request: Request | None = None) -> dict:
     rt = load_runtime_settings()
     return {
         "status": "running",
         "uptime_seconds": get_uptime_seconds(),
         "host": rt.host,
         "port": rt.port,
-        "url": f"http://{rt.host}:{rt.port}",
+        "url": resolve_public_url(
+            request,
+            rt.host,
+            rt.port,
+            app_settings.public_url,
+        ),
         "run_mode": rt.run_mode.value,
         "mode_label": rt.mode_label,
         "reload_enabled": rt.is_development,

@@ -19,6 +19,7 @@ ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT))
 os.chdir(ROOT)
 
+from app.config import settings as app_settings  # noqa: E402
 from app.runtime_settings import load_runtime_settings  # noqa: E402
 
 
@@ -53,10 +54,11 @@ def main() -> None:
     import uvicorn
 
     rt = load_runtime_settings()
-    url = f"http://{rt.host}:{rt.port}"
+    check_host = "127.0.0.1" if rt.host in ("0.0.0.0", "::") else rt.host
+    url = app_settings.public_url.rstrip("/") or f"http://{check_host}:{rt.port}"
 
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
-        if sock.connect_ex((rt.host, rt.port)) == 0:
+        if sock.connect_ex((check_host, rt.port)) == 0:
             pid = _find_listening_pid(rt.port)
             print(f"\n[오류] 포트 {rt.port}이(가) 이미 사용 중입니다.")
             if pid:
@@ -78,6 +80,8 @@ def main() -> None:
         port=rt.port,
         reload=rt.is_development,
         reload_dirs=reload_dirs if rt.is_development else None,
+        proxy_headers=app_settings.trust_proxy_headers,
+        forwarded_allow_ips=app_settings.forwarded_allow_ips,
     )
 
 

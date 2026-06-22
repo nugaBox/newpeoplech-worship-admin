@@ -28,6 +28,11 @@ class Settings(BaseSettings):
     )
     output_dir: Path = ROOT_DIR / "app" / "data" / "output"
 
+    # 역방향 프록시 (예: https://worship.newpeoplech.com)
+    public_url: str = ""
+    trust_proxy_headers: bool = True
+    forwarded_allow_ips: str = "127.0.0.1"
+
     def ensure_output_dir(self) -> Path:
         self.output_dir.mkdir(parents=True, exist_ok=True)
         return self.output_dir
