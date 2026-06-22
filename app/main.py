@@ -7,7 +7,9 @@ from fastapi import FastAPI, Request
 from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from uvicorn.middleware.proxy_headers import ProxyHeadersMiddleware
 
+from app.config import settings as app_settings
 from app.routers import bulletin, favorites, outlines, server, settings
 from app.server_control import mark_server_started
 
@@ -23,11 +25,17 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(
-    title="광주새백성교회 예배 관리",
+    title="광주새백성교회 예배 준비실",
     description="주보/PPT 생성 로컬 웹서비스",
     version="0.2.0",
     lifespan=lifespan,
 )
+
+if app_settings.trust_proxy_headers:
+    app.add_middleware(
+        ProxyHeadersMiddleware,
+        trusted_hosts=app_settings.forwarded_allow_ips,
+    )
 
 app.include_router(bulletin.router)
 app.include_router(settings.router)
@@ -90,9 +98,10 @@ async def control_page() -> HTMLResponse:
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#10A37F">
-  <title>서버 제어 — 예배 관리</title>
+  <title>광주새백성교회 예배 준비실</title>
   <link rel="icon" href="/static/images/favicon/favicon.ico" sizes="any">
   <link rel="icon" href="/static/images/favicon/favicon.svg" type="image/svg+xml">
+  <link rel="icon" type="image/png" href="/static/images/favicon/favicon-96x96.png" sizes="96x96">
   <style>
     body { font-family: system-ui, sans-serif; max-width: 480px; margin: 48px auto; padding: 0 16px; }
     h1 { font-size: 1.25rem; }
