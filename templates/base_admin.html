@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>{% block title %}{{ page_title }}{% endblock %} — 광주새백성교회 예배 관리</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.min.css">
+  <link rel="stylesheet" href="/static/admin/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/static/admin/css/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="/static/admin/css/admin.css">
+  <link rel="stylesheet" href="/static/css/worship-admin.css">
+  {% block head %}{% endblock %}
+</head>
+<body>
+
+<div class="app" id="adminApp">
+  <div class="scrim" id="scrim"></div>
+
+  <aside class="sidebar" id="sidebar">
+    <a class="brand" href="/">
+      <div class="brand-mark"><i class="fa-solid fa-church"></i></div>
+      <div>
+        <div class="brand-name">예배 관리</div>
+        <div class="brand-sub">광주새백성교회</div>
+      </div>
+    </a>
+
+    <nav class="nav-section">
+      <div class="nav-label">메뉴</div>
+      <a class="nav-item {% if active_nav == 'home' %}active{% endif %}" href="/">
+        <span class="ic"><i class="fa-solid fa-house"></i></span>
+        홈
+      </a>
+      <a class="nav-item {% if active_nav == 'worship' %}active{% endif %}" href="/worship">
+        <span class="ic"><i class="fa-solid fa-book-bible"></i></span>
+        예배 관리
+      </a>
+      <a class="nav-item {% if active_nav == 'outline' %}active{% endif %}" href="/outline">
+        <span class="ic"><i class="fa-solid fa-list-check"></i></span>
+        목차 관리
+      </a>
+    </nav>
+
+    <div class="nav-bottom">
+      <div class="b-item" data-open-modal="settings"><i class="fa-solid fa-gear me-1"></i> 설정</div>
+    </div>
+
+    <div class="side-footer">
+      <div class="avatar-square"><i class="fa-solid fa-server"></i></div>
+      <div class="who flex-grow-1">
+        <div class="name text-truncate" id="side-server-label">서버 확인 중</div>
+      </div>
+      <div class="side-server-actions">
+        <button type="button" class="icon-btn" id="btn-server-restart" title="서버 재시작">
+          <i class="fa-solid fa-rotate"></i>
+        </button>
+        <button type="button" class="icon-btn danger" id="btn-server-stop" title="서버 중지">
+          <i class="fa-solid fa-power-off"></i>
+        </button>
+      </div>
+      <span id="nav-server-dot" class="server-dot online" title="서버 상태"></span>
+    </div>
+  </aside>
+
+  <div class="main">
+    <div class="panel">
+      <header class="crumb-bar">
+        <button class="toggle-side" id="sideToggle" title="사이드바 접기/펼치기">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+        <div class="crumbs">
+          <span class="root">예배 관리</span>
+          <span class="sep">/</span>
+          <span class="cur" id="crumb">{{ page_title }}</span>
+        </div>
+        <div class="actions">
+          <button class="icon-btn" id="themeToggle" title="다크/라이트 전환">
+            <i class="fa-solid fa-moon" id="themeIcon"></i>
+          </button>
+        </div>
+      </header>
+
+      <main class="content">
+        {% block content %}{% endblock %}
+      </main>
+    </div>
+  </div>
+</div>
+
+{% include "partials/settings_modal.html" %}
+
+<script src="/static/admin/js/bootstrap.bundle.min.js"></script>
+<script src="/static/js/worship-admin.js"></script>
+<script src="/static/js/server-status.js"></script>
+<script src="/static/js/server-controls.js"></script>
+<script src="/static/js/settings-modal.js"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

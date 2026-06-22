@@ -1,0 +1,15 @@
+__pycache__/
+*.py[cod]
+.env
+.venv/
+venv/
+build/
+dist/
+*.exe
+app/data/launcher.log
+app/data/test_report.json
+app/data/integration_test_report.json
+app/data/output/
+*.log
+.pytest_cache/
+.mypy_cache/

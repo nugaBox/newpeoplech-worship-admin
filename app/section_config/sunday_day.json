@@ -1,0 +1,54 @@
+{
+  "name": "주일낮예배",
+  "placeholders": {
+    "{{날짜}}": "F_날짜",
+    "{{대표기도}}": "R_A_기도자",
+    "{{성경본문}}": "R_A_본문",
+    "{{성경페이지}}": "R_A_본문페이지",
+    "{{설교제목}}": "R_A_설교제목",
+    "{{설교목차}}": "R_A_강해표시",
+    "{{봉헌찬송}}": "R_A_봉헌찬송"
+  },
+  "sections": [
+    {
+      "marker": "[[경배찬송]]",
+      "type": "hymn_lib",
+      "field": "R_A_경배찬송"
+    },
+    {
+      "marker": "[[교독문]]",
+      "type": "responsive_lib",
+      "field": "R_A_교독문번호"
+    },
+    {
+      "marker": "[[찬송2]]",
+      "type": "hymn_lib",
+      "field": "R_A_찬송1"
+    },
+    {
+      "marker": "[[대표기도]]",
+      "type": "upload",
+      "field": "대표기도파일"
+    },
+    {
+      "marker": "[[성경봉독]]",
+      "type": "scripture",
+      "field": "R_A_본문"
+    },
+    {
+      "marker": "[[설교]]",
+      "type": "upload",
+      "field": "설교파일"
+    },
+    {
+      "marker": "[[봉헌찬송]]",
+      "type": "hymn_lib",
+      "field": "R_A_봉헌찬송"
+    },
+    {
+      "marker": "[[광고]]",
+      "type": "upload",
+      "field": "광고파일"
+    }
+  ]
+}

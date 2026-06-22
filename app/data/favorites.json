@@ -1,0 +1,31 @@
+{
+  "items": [
+    {"id": "f1", "type": "folder", "name": "찬송가 PPT 슬라이드쇼", "path": "C:\\Users\\churchCom\\Documents\\churchCloud\\찬양 자료\\찬송가 PPT"},
+    {"id": "f2", "type": "folder", "name": "찬송가 PPT 원본", "path": "C:\\Users\\churchCom\\Documents\\churchCloud\\교회 문서\\■ PPT\\찬송가 PPT"},
+    {"id": "sep1", "type": "separator", "name": "-", "path": ""},
+    {"id": "f3", "type": "folder", "name": "새찬송가 PPT 슬라이드쇼", "path": "C:\\Users\\churchCom\\Documents\\churchCloud\\찬양 자료\\새찬송가 PPT"},
+    {"id": "f4", "type": "folder", "name": "새찬송가 PPT 원본", "path": "C:\\Users\\churchCom\\Documents\\churchCloud\\교회 문서\\■ PPT\\새찬송가 PPT"},
+    {"id": "sep2", "type": "separator", "name": "-", "path": ""},
+    {"id": "f5", "type": "folder", "name": "찬양팀 자료 PPT", "path": "C:\\Users\\churchCom\\Documents\\churchCloud\\찬양 자료\\★찬양팀 자료\\PPT"},
+    {"id": "f6", "type": "folder", "name": "찬양팀 자료 찬양순서", "path": "C:\\Users\\churchCom\\Documents\\churchCloud\\찬양 자료\\★찬양팀 자료\\찬양순서"},
+    {"id": "sep3", "type": "separator", "name": "-", "path": ""},
+    {"id": "f7", "type": "folder", "name": "복음성가 PPT", "path": "C:\\Users\\churchCom\\Documents\\churchCloud\\찬양 자료\\복음성가 PPT"},
+    {"id": "f8", "type": "folder", "name": "복음성가 악보", "path": "C:\\Users\\churchCom\\Documents\\churchCloud\\찬양 자료\\복음성가 악보"},
+    {"id": "sep4", "type": "separator", "name": "-", "path": ""},
+    {"id": "f9", "type": "folder", "name": "교독문 PPT", "path": "C:\\Users\\churchCom\\Documents\\churchCloud\\교회 문서\\■ PPT\\교독문 PPT"},
+    {"id": "f10", "type": "folder", "name": "광고 PPT", "path": "C:\\Users\\churchCom\\Documents\\churchCloud\\교회 문서\\■ PPT\\광고 PPT"},
+    {"id": "f11", "type": "folder", "name": "예배 PPT", "path": "C:\\Users\\churchCom\\Documents\\churchCloud\\교회 문서\\■ PPT\\예배 PPT"},
+    {"id": "f12", "type": "folder", "name": "■ PPT", "path": "C:\\Users\\churchCom\\Documents\\churchCloud\\교회 문서\\■ PPT"},
+    {"id": "sep5", "type": "separator", "name": "-", "path": ""},
+    {"id": "f13", "type": "folder", "name": "Documents", "path": "C:\\Users\\churchCom\\Documents"},
+    {"id": "f14", "type": "folder", "name": "03 주보", "path": "C:\\Users\\churchCom\\Documents\\churchCloud\\교회 문서\\03 주보"},
+    {"id": "f15", "type": "folder", "name": "■ 디자인", "path": "\\\\churchCloud\\ARCHIVE\\교회 문서\\■ 디자인"},
+    {"id": "sep6", "type": "separator", "name": "-", "path": ""},
+    {"id": "p1", "type": "file", "name": "주일낮예배-2026", "path": "C:\\Users\\churchCom\\Documents\\churchCloud\\교회 문서\\■ PPT\\주일낮예배-2026-템플릿.pptx"},
+    {"id": "p2", "type": "file", "name": "주일찬양예배-2026", "path": "C:\\Users\\churchCom\\Documents\\churchCloud\\교회 문서\\■ PPT\\주일찬양예배-2026-템플릿.pptx"},
+    {"id": "p3", "type": "file", "name": "설교목차 텍스트", "path": "C:\\Users\\churchCom\\Documents\\churchCloud\\교회 문서\\■ 방송\\설교목차"},
+    {"id": "p4", "type": "file", "name": "설교목차-주일낮예배", "path": "C:\\Users\\churchCom\\Documents\\churchCloud\\교회 문서\\■ 방송\\설교목차\\주일낮예배"},
+    {"id": "p5", "type": "file", "name": "설교목차-주일찬양예배", "path": "C:\\Users\\churchCom\\Documents\\churchCloud\\교회 문서\\■ 방송\\설교목차\\주일찬양예배"},
+    {"id": "p6", "type": "file", "name": "주일낮예배 설교 Title.psd", "path": "D:\\설교 영상(Footage)\\2026\\2026-주일낮예배 설교-Title.psd"}
+  ]
+}

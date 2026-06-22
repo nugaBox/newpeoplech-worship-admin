@@ -1,0 +1,32 @@
+{% extends "base_admin.html" %}
+
+{% block content %}
+<div class="page-head">
+  <div>
+    <h1>홈</h1>
+    <p class="sub">자주 쓰는 폴더와 프로그램을 빠르게 엽니다.</p>
+  </div>
+</div>
+
+<div class="grid-2">
+  <section class="card-lite">
+    <div class="card-lite-h">
+      <h2><i class="fa-solid fa-folder-open me-2"></i>폴더</h2>
+    </div>
+    <div class="quick-grid" id="home-folders"></div>
+  </section>
+
+  <section class="card-lite">
+    <div class="card-lite-h">
+      <h2><i class="fa-solid fa-file me-2"></i>프로그램 · 파일</h2>
+    </div>
+    <div class="quick-grid" id="home-programs"></div>
+  </section>
+</div>
+
+<div id="home-status" class="small text-muted mt-3"></div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/home.js"></script>
+{% endblock %}

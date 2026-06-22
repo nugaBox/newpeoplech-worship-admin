@@ -1,0 +1,79 @@
+{% extends "base_admin.html" %}
+
+{% block content %}
+<div class="page-head">
+  <div>
+    <h1>예배 관리</h1>
+    <p class="sub">목차를 선택한 뒤 주보·PPT를 생성합니다.</p>
+  </div>
+</div>
+
+<div class="card-lite mb-4">
+  <div class="card-lite-h"><h2>목차 선택</h2></div>
+  <div class="row g-3 align-items-end">
+    <div class="col-md-8">
+      <label class="form-label small text-muted">저장된 목차</label>
+      <select class="form-select" id="worship-outline-select">
+        <option value="">— 목차를 선택하세요 —</option>
+      </select>
+    </div>
+    <div class="col-md-4 d-flex gap-2">
+      <a href="/outline" class="btn-ghost w-100 text-center">목차 관리</a>
+      <button type="button" class="btn-ghost" id="worship-reload-outlines" title="새로고침">
+        <i class="fa-solid fa-rotate"></i>
+      </button>
+    </div>
+  </div>
+  <div id="worship-outline-summary" class="outline-summary mt-3 d-none"></div>
+</div>
+
+<div class="grid-3" id="worship-actions">
+  <div class="action-card disabled" id="card-hwp">
+    <div class="action-ic"><i class="fa-solid fa-file-lines"></i></div>
+    <h3>주보 생성</h3>
+    <p>한글 hwpx 주보를 생성합니다.</p>
+    <button type="button" class="btn-dark-pill w-100" id="btn-hwp" disabled>주보 생성</button>
+  </div>
+  <div class="action-card disabled" id="card-ppt-day">
+    <div class="action-ic"><i class="fa-solid fa-display"></i></div>
+    <h3>낮예배 PPT</h3>
+    <p>주일낮예배 PPT를 생성합니다.</p>
+    <button type="button" class="btn-dark-pill w-100" id="btn-ppt-day" disabled>낮예배 PPT 생성</button>
+  </div>
+  <div class="action-card disabled opacity-50" id="card-ppt-praise">
+    <div class="action-ic"><i class="fa-solid fa-music"></i></div>
+    <h3>찬양예배 PPT</h3>
+    <p class="text-muted">2단계에서 지원 예정</p>
+    <button type="button" class="btn-ghost w-100" disabled>준비 중</button>
+  </div>
+</div>
+
+<div class="card-lite mt-4">
+  <div class="card-lite-h"><h2>첨부 파일 (PPT 생성용)</h2></div>
+  <div class="row g-3">
+    <div class="col-md-4">
+      <label class="form-label small">대표기도 PPT</label>
+      <input type="file" class="form-control form-control-sm" id="prayer-file" accept=".ppt,.pptx">
+    </div>
+    <div class="col-md-4">
+      <label class="form-label small">설교 PPT</label>
+      <input type="file" class="form-control form-control-sm" id="sermon-file" accept=".ppt,.pptx">
+    </div>
+    <div class="col-md-4">
+      <label class="form-label small">광고 PPT</label>
+      <input type="file" class="form-control form-control-sm" id="ad-file" accept=".ppt,.pptx">
+    </div>
+  </div>
+</div>
+
+<div class="card-lite mt-4">
+  <div class="card-lite-h"><h2>생성 결과</h2></div>
+  <div id="worship-result" class="small text-muted">목차를 선택한 뒤 생성 버튼을 누르세요.</div>
+</div>
+
+<div id="worship-status" class="small text-muted mt-3"></div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/worship.js"></script>
+{% endblock %}
