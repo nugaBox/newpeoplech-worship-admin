@@ -8,9 +8,10 @@
       <div class="ms-body">
         <aside class="ms-rail">
           <div class="ms-group">시스템</div>
-          <div class="ms-item active" data-ms="server"><i class="fa-solid fa-server"></i> 서버</div>
-          <div class="ms-item" data-ms="paths"><i class="fa-solid fa-folder-tree"></i> 파일 경로</div>
+          <div class="ms-item active" data-ms="server"><i class="fa-solid fa-server"></i> 시스템 정보</div>
+          <div class="ms-item" data-ms="paths"><i class="fa-solid fa-folder-tree"></i> 경로 설정</div>
           <div class="ms-item" data-ms="runtime"><i class="fa-solid fa-code"></i> 실행 모드</div>
+          <div class="ms-item" data-ms="admin"><i class="fa-solid fa-user-shield"></i> 관리자 설정</div>
           <div class="ms-group">바로가기</div>
           <div class="ms-item" data-ms="favorites"><i class="fa-solid fa-star"></i> 즐겨찾기</div>
         </aside>
@@ -18,8 +19,12 @@
         <section class="ms-detail">
           <!-- 서버 -->
           <div class="ms-pane" data-pane="server">
-            <div class="ms-section-label">서버 상태</div>
+            <div class="ms-section-label">시스템 정보</div>
             <div id="modal-server-status" class="small text-muted mb-3">불러오는 중...</div>
+            <div class="d-flex align-items-center gap-2 mb-3">
+              <span id="modal-server-dot" class="server-dot online" title="서버 상태"></span>
+              <span id="modal-server-mode" class="small text-muted"></span>
+            </div>
             <div class="d-flex gap-2 flex-wrap">
               <button type="button" class="btn-ghost" id="modal-btn-refresh-server">
                 <i class="fa-solid fa-rotate me-1"></i>상태 새로고침
@@ -34,11 +39,12 @@
             <div id="modal-server-action" class="small text-muted mt-3"></div>
           </div>
 
-          <!-- 파일 경로 -->
+          <!-- 경로 설정 -->
           <div class="ms-pane" data-pane="paths" style="display:none;">
-            <div class="ms-section-label">템플릿·폴더 경로</div>
-            <p class="small text-muted">`.env` 파일에서 경로를 수정할 수 있습니다. 변경 후 서버를 재시작하세요.</p>
+            <div class="ms-section-label">경로 설정</div>
+            <p class="small text-muted">문서·생성 경로와 홈 <strong>빠른 시작</strong>(찬송가·교독문 슬라이드쇼) 폴더를 이 PC에서 찾아 저장합니다. 저장 즉시 반영됩니다.</p>
             <div id="modal-paths-list"></div>
+            <div id="modal-paths-status" class="small text-muted mt-2"></div>
           </div>
 
           <!-- 실행 모드 -->
@@ -67,15 +73,39 @@
             <div id="modal-runtime-status" class="small text-muted mt-2"></div>
           </div>
 
+          <!-- 관리자 설정 -->
+          <div class="ms-pane" data-pane="admin" style="display:none;">
+            <div class="ms-section-label">관리자 설정</div>
+            <p class="small text-muted mb-3">관리자 아이디는 <strong id="modal-admin-username">admin</strong> 입니다. 비밀번호만 변경할 수 있습니다.</p>
+            <form id="modal-admin-password-form" novalidate>
+              <div class="fg">
+                <label for="modal-admin-current-pw">현재 비밀번호</label>
+                <input type="password" class="form-control" id="modal-admin-current-pw" autocomplete="current-password" required>
+              </div>
+              <div class="fg">
+                <label for="modal-admin-new-pw">새 비밀번호</label>
+                <input type="password" class="form-control" id="modal-admin-new-pw" autocomplete="new-password" minlength="4" required>
+              </div>
+              <div class="fg">
+                <label for="modal-admin-new-pw-confirm">새 비밀번호 확인</label>
+                <input type="password" class="form-control" id="modal-admin-new-pw-confirm" autocomplete="new-password" minlength="4" required>
+              </div>
+              <button type="submit" class="btn-dark-pill" id="modal-btn-change-password">
+                <i class="fa-solid fa-check me-1"></i>비밀번호 변경
+              </button>
+            </form>
+            <div id="modal-admin-status" class="small text-muted mt-2"></div>
+          </div>
+
           <!-- 즐겨찾기 -->
           <div class="ms-pane" data-pane="favorites" style="display:none;">
             <div class="ms-section-label">홈 화면 즐겨찾기</div>
-            <p class="small text-muted">폴더·파일 바로가기 목록입니다. 저장하면 홈 화면에 반영됩니다.</p>
+            <p class="small text-muted">폴더·파일 영역을 나누고, 각 영역 안에 소제목(찬송가, 찬양팀 등)을 넣을 수 있습니다. 저장하면 홈 화면에 반영됩니다.</p>
             <div id="modal-favorites-editor" class="mb-3"></div>
             <div class="d-flex gap-2 flex-wrap">
               <button type="button" class="btn-ghost" id="modal-btn-add-folder">+ 폴더</button>
               <button type="button" class="btn-ghost" id="modal-btn-add-file">+ 파일</button>
-              <button type="button" class="btn-ghost" id="modal-btn-add-sep">+ 구분선</button>
+              <button type="button" class="btn-ghost" id="modal-btn-add-heading">+ 소제목</button>
               <button type="button" class="btn-dark-pill" id="modal-btn-save-favorites">
                 <i class="fa-solid fa-check me-1"></i>즐겨찾기 저장
               </button>

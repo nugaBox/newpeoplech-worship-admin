@@ -1,5 +1,19 @@
 /* 예배 관리 앱 — admin.css 보완 */
 
+.login-page {
+  --hero-photo: none;
+}
+
+.login-error {
+  margin: 8px 0 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-size: 13px;
+  color: var(--danger);
+  background: color-mix(in srgb, var(--danger) 8%, var(--surface));
+  border: 1px solid color-mix(in srgb, var(--danger) 25%, var(--border));
+}
+
 .server-dot {
   display: inline-block;
   width: 10px;
@@ -76,6 +90,39 @@
   margin: 0;
 }
 
+.home-section + .home-section {
+  margin-top: 16px;
+}
+
+.quick-start-form {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.quick-start-form-secondary {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+}
+
+.quick-start-label {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.quick-start-input {
+  width: 88px;
+  text-align: center;
+}
+
+.quick-start-suffix {
+  font-size: 14px;
+  color: var(--muted);
+}
+
 .grid-2 {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -95,21 +142,25 @@
 .quick-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 8px;
+  gap: 6px;
+}
+
+.quick-grid-2 {
+  grid-template-columns: repeat(2, 1fr);
 }
 
 .quick-btn {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   width: 100%;
   text-align: left;
-  padding: 10px 12px;
+  padding: 6px 10px;
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   background: var(--surface-2);
   color: var(--ink);
-  font-size: 13.5px;
+  font-size: 13px;
   cursor: pointer;
   transition: background .15s, border-color .15s;
 }
@@ -120,15 +171,115 @@
 }
 
 .quick-btn .ic {
-  width: 28px;
-  height: 28px;
-  border-radius: 8px;
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
   background: var(--panel);
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--muted);
   flex-shrink: 0;
+  font-size: 12px;
+}
+
+.quick-heading {
+  grid-column: 1 / -1;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  margin-top: 10px;
+  margin-bottom: 2px;
+  padding-left: 2px;
+}
+
+.quick-heading:first-child {
+  margin-top: 0;
+}
+
+.fav-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.fav-subcard {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  min-width: 0;
+}
+
+.fav-block-title {
+  font-size: 13px;
+  font-weight: 600;
+  margin: 0 0 10px;
+  color: var(--ink);
+}
+
+@media (max-width: 992px) {
+  .fav-grid-2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+.path-setting-row {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.path-group + .path-group {
+  margin-top: 18px;
+  padding-top: 4px;
+}
+
+.path-group-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+
+.path-setting-hint {
+  margin-top: -4px;
+}
+
+.path-setting-row:last-child {
+  border-bottom: none;
+}
+
+.path-setting-meta h6 {
+  margin: 0 0 8px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.path-status.ok {
+  color: var(--success);
+}
+
+.path-status.bad {
+  color: var(--danger);
+}
+
+.path-setting-field {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.path-setting-field .path-input {
+  flex: 1 1 240px;
+  min-width: 0;
+  font-size: 12px;
+}
+
+.path-setting-field .btn-ghost,
+.path-setting-field .btn-dark-pill {
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .quick-sep {
@@ -243,9 +394,9 @@
 
 .fav-edit-row {
   display: grid;
-  grid-template-columns: 90px 1fr 2fr 36px;
-  gap: 8px;
-  margin-bottom: 8px;
+  grid-template-columns: 100px 90px 1fr 2fr 36px;
+  gap: 6px;
+  margin-bottom: 6px;
   align-items: center;
 }
 

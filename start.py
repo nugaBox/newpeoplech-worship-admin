@@ -73,13 +73,13 @@ def main() -> None:
     if rt.open_browser:
         webbrowser.open(url)
 
-    reload_dirs = [str(ROOT / d) for d in ("app", "templates", "static")]
+    reload_dirs = [str(ROOT)] if rt.is_development else None
     uvicorn.run(
         "app.main:app",
         host=rt.host,
         port=rt.port,
         reload=rt.is_development,
-        reload_dirs=reload_dirs if rt.is_development else None,
+        reload_dirs=reload_dirs,
         proxy_headers=app_settings.trust_proxy_headers,
         forwarded_allow_ips=app_settings.forwarded_allow_ips,
     )

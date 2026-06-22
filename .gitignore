@@ -10,6 +10,7 @@ app/data/launcher.log
 app/data/test_report.json
 app/data/integration_test_report.json
 app/data/output/
+app/data/worship.db
 *.log
 .pytest_cache/
 .mypy_cache/

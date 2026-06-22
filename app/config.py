@@ -2,9 +2,14 @@
 
 from pathlib import Path
 
+from dotenv import load_dotenv
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+from app.path_settings import get_resolved_path, init_path_db
+
 ROOT_DIR = Path(__file__).resolve().parent.parent
+
+load_dotenv(ROOT_DIR / ".env")
 
 
 class Settings(BaseSettings):
@@ -14,24 +19,32 @@ class Settings(BaseSettings):
         extra="ignore",
     )
 
-    hwp_template_path: Path = Path(
-        r"C:\Users\churchCom\Documents\churchCloud\교회 문서\03 주보\광주새백성교회_주보_2026_메일머지.hwpx"
-    )
-    day_ppt_template_path: Path = Path(
-        r"C:\Users\churchCom\Documents\churchCloud\교회 문서\■ PPT\주일낮예배-2026-템플릿.pptx"
-    )
-    hymn_ppt_dir: Path = Path(
-        r"C:\Users\churchCom\Documents\churchCloud\교회 문서\■ PPT\찬송가 PPT"
-    )
-    responsive_ppt_dir: Path = Path(
-        r"C:\Users\churchCom\Documents\churchCloud\교회 문서\■ PPT\교독문 PPT"
-    )
-    output_dir: Path = ROOT_DIR / "app" / "data" / "output"
-
-    # 역방향 프록시 (예: https://worship.newpeoplech.com)
     public_url: str = ""
     trust_proxy_headers: bool = True
     forwarded_allow_ips: str = "127.0.0.1"
+
+    admin_username: str = "admin"
+    cookie_secure: bool = False
+
+    @property
+    def hwp_template_path(self) -> Path:
+        return get_resolved_path("hwp_template")
+
+    @property
+    def day_ppt_template_path(self) -> Path:
+        return get_resolved_path("day_ppt_template")
+
+    @property
+    def hymn_ppt_dir(self) -> Path:
+        return get_resolved_path("hymn_ppt_dir")
+
+    @property
+    def responsive_ppt_dir(self) -> Path:
+        return get_resolved_path("responsive_ppt_dir")
+
+    @property
+    def output_dir(self) -> Path:
+        return get_resolved_path("output_dir")
 
     def ensure_output_dir(self) -> Path:
         self.output_dir.mkdir(parents=True, exist_ok=True)
@@ -63,3 +76,4 @@ class Settings(BaseSettings):
 
 
 settings = Settings()
+init_path_db()

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#10A37F">
+  <title>예배 준비실 · 로그인</title>
+  <link rel="icon" href="/static/images/favicon/favicon.ico" sizes="any">
+  <link rel="icon" href="/static/images/favicon/favicon.svg" type="image/svg+xml">
+  <link rel="icon" type="image/png" href="/static/images/favicon/favicon-96x96.png" sizes="96x96">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.min.css">
+  <link rel="stylesheet" href="/static/admin/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/static/admin/css/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="/static/admin/css/admin.css">
+  <link rel="stylesheet" href="/static/css/worship-admin.css">
+</head>
+<body class="login-page"
+      data-password-configured="{{ 'true' if password_configured else 'false' }}"
+      data-username="{{ username }}">
+
+<button type="button" class="login-theme-toggle" id="themeToggle" aria-label="다크/라이트 전환" title="다크/라이트 전환">
+  <i class="fa-solid fa-moon" id="themeIcon"></i>
+</button>
+
+<main class="login-stage">
+
+  <section class="login-hero" aria-labelledby="loginHeroTitle">
+    <div class="login-hero-copy">
+      <div class="login-hero-eyebrow">광주새백성교회 · 예배 준비실</div>
+      <h2 class="login-hero-title" id="loginHeroTitle">환영합니다.<br>예배 준비를 한 자리에서.</h2>
+      <p class="login-hero-lede">
+        주보·PPT 생성, 찬송가·교독문 실행, 송출 준비까지
+        예배 준비실 PC에서 안전하게 관리하세요.
+      </p>
+      <ul class="login-hero-features">
+        <li><span class="login-tick"><i class="fa-solid fa-check" aria-hidden="true"></i></span>주보/PPT 생성</li>
+        <li><span class="login-tick"><i class="fa-solid fa-check" aria-hidden="true"></i></span>예배 중 실행</li>
+        <li><span class="login-tick"><i class="fa-solid fa-check" aria-hidden="true"></i></span>목차 관리</li>
+        <li><span class="login-tick"><i class="fa-solid fa-check" aria-hidden="true"></i></span>경로·즐겨찾기 설정</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="login-auth" aria-labelledby="loginAuthTitle">
+    <div class="login-auth-inner">
+
+      <!-- 최초 비밀번호 설정 -->
+      <div id="setupPanel"{% if password_configured %} style="display:none;"{% endif %}>
+        <h1 id="setupTitle">관리자 비밀번호 설정.</h1>
+        <p class="login-auth-lede">
+          처음 사용하시는 경우 관리자 비밀번호를 설정해 주세요.<br>
+          기본 아이디는 <strong id="setupUsername">{{ username }}</strong> 입니다.
+        </p>
+        <form id="setupForm" novalidate>
+          <div class="login-form-group">
+            <label class="login-label" for="setupPw">비밀번호</label>
+            <input id="setupPw" class="login-field" type="password" name="password" autocomplete="new-password"
+                   placeholder="비밀번호 (4자 이상)" required minlength="4">
+          </div>
+          <div class="login-form-group">
+            <label class="login-label" for="setupPwConfirm">비밀번호 확인</label>
+            <input id="setupPwConfirm" class="login-field" type="password" name="password_confirm" autocomplete="new-password"
+                   placeholder="비밀번호를 다시 입력하세요" required minlength="4">
+          </div>
+          <div id="setupError" class="login-error" role="alert" hidden></div>
+          <button class="login-btn-primary" type="submit" id="setupSubmit">비밀번호 설정</button>
+        </form>
+      </div>
+
+      <!-- 로그인 -->
+      <div id="loginPanel"{% if not password_configured %} style="display:none;"{% endif %}>
+        <h1 id="loginAuthTitle">관리자 로그인.</h1>
+        <p class="login-auth-lede">
+          관리자 계정으로 로그인하세요.
+        </p>
+        <form id="loginForm" novalidate>
+          <div class="login-form-group">
+            <label class="login-label" for="loginId">아이디</label>
+            <input id="loginId" class="login-field" type="text" name="username" autocomplete="username"
+                   placeholder="아이디를 입력하세요" value="{{ username }}" required>
+          </div>
+          <div class="login-form-group">
+            <label class="login-label" for="loginPw">비밀번호</label>
+            <input id="loginPw" class="login-field" type="password" name="password" autocomplete="current-password"
+                   placeholder="비밀번호를 입력하세요" required>
+          </div>
+          <label class="login-remember">
+            <input type="checkbox" id="rememberLogin">
+            <span class="login-remember-box"><i class="fa-solid fa-check" aria-hidden="true"></i></span>
+            자동 로그인
+          </label>
+          <div id="loginError" class="login-error" role="alert" hidden></div>
+          <button class="login-btn-primary" type="submit" id="loginSubmit">로그인</button>
+        </form>
+      </div>
+
+    </div>
+
+    <div class="login-footer-links">
+      <span>© 광주새백성교회 예배 준비실</span>
+    </div>
+  </section>
+
+</main>
+
+<script src="/static/js/login.js"></script>
+</body>
+</html>

@@ -49,23 +49,17 @@
     </nav>
 
     <div class="nav-bottom">
-      <div class="b-item" data-open-modal="settings"><i class="fa-solid fa-gear me-1"></i> 설정</div>
+      <div class="b-item" data-open-modal="settings">설정</div>
     </div>
 
     <div class="side-footer">
-      <div class="avatar-square"><i class="fa-solid fa-server"></i></div>
+      <div class="avatar-square"><i class="fa-solid fa-user"></i></div>
       <div class="who flex-grow-1">
-        <div class="name text-truncate" id="side-server-label">서버 확인 중</div>
+        <div class="name text-truncate" id="side-user-name">{{ current_user or "관리자" }}</div>
       </div>
-      <div class="side-server-actions">
-        <button type="button" class="icon-btn" id="btn-server-restart" title="서버 재시작">
-          <i class="fa-solid fa-rotate"></i>
-        </button>
-        <button type="button" class="icon-btn danger" id="btn-server-stop" title="서버 중지">
-          <i class="fa-solid fa-power-off"></i>
-        </button>
-      </div>
-      <span id="nav-server-dot" class="server-dot online" title="서버 상태"></span>
+      <button type="button" class="icon-btn" id="btn-logout" title="로그아웃">
+        <i class="fa-solid fa-right-from-bracket"></i>
+      </button>
     </div>
   </aside>
 
@@ -98,8 +92,8 @@
 
 <script src="/static/admin/js/bootstrap.bundle.min.js"></script>
 <script src="/static/js/worship-admin.js"></script>
-<script src="/static/js/server-status.js"></script>
 <script src="/static/js/server-controls.js"></script>
+<script src="/static/js/auth.js"></script>
 <script src="/static/js/settings-modal.js"></script>
 {% block scripts %}{% endblock %}
 </body>

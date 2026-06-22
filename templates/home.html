@@ -4,29 +4,71 @@
 <div class="page-head">
   <div>
     <h1>홈</h1>
-    <p class="sub">자주 쓰는 폴더와 프로그램을 빠르게 엽니다.</p>
   </div>
 </div>
 
-<div class="grid-2">
-  <section class="card-lite">
-    <div class="card-lite-h">
-      <h2><i class="fa-solid fa-folder-open me-2"></i>폴더</h2>
-    </div>
-    <div class="quick-grid" id="home-folders"></div>
-  </section>
+<section class="card-lite home-section">
+  <div class="card-lite-h">
+    <h2><i class="fa-solid fa-bolt me-2"></i>빠른 시작</h2>
+  </div>
+  <form class="quick-start-form" id="quick-hymn-form">
+    <label class="quick-start-label" for="quick-hymn-num">찬송가</label>
+    <input
+      type="number"
+      class="form-control quick-start-input"
+      id="quick-hymn-num"
+      min="1"
+      max="645"
+      inputmode="numeric"
+      placeholder="장"
+      autocomplete="off"
+    >
+    <span class="quick-start-suffix">장</span>
+    <button type="submit" class="btn-dark-pill" id="quick-hymn-run">
+      <i class="fa-solid fa-play me-1"></i>실행
+    </button>
+  </form>
+  <form class="quick-start-form quick-start-form-secondary" id="quick-responsive-form">
+    <label class="quick-start-label" for="quick-responsive-num">교독문</label>
+    <input
+      type="number"
+      class="form-control quick-start-input"
+      id="quick-responsive-num"
+      min="1"
+      max="999"
+      inputmode="numeric"
+      placeholder="장"
+      autocomplete="off"
+    >
+    <span class="quick-start-suffix">장</span>
+    <button type="submit" class="btn-dark-pill" id="quick-responsive-run">
+      <i class="fa-solid fa-play me-1"></i>실행
+    </button>
+  </form>
+</section>
 
-  <section class="card-lite">
-    <div class="card-lite-h">
-      <h2><i class="fa-solid fa-file me-2"></i>프로그램 · 파일</h2>
+<section class="card-lite home-section">
+  <div class="card-lite-h">
+    <h2><i class="fa-solid fa-star me-2"></i>즐겨찾기</h2>
+  </div>
+
+  <div class="fav-grid-2">
+    <div class="fav-subcard">
+      <h3 class="fav-block-title">폴더</h3>
+      <div class="quick-grid quick-grid-2" id="home-folders"></div>
     </div>
-    <div class="quick-grid" id="home-programs"></div>
-  </section>
-</div>
+
+    <div class="fav-subcard">
+      <h3 class="fav-block-title">파일</h3>
+      <div class="quick-grid quick-grid-2" id="home-files"></div>
+    </div>
+  </div>
+</section>
 
 <div id="home-status" class="small text-muted mt-3"></div>
 {% endblock %}
 
 {% block scripts %}
+<script src="/static/js/toast.js"></script>
 <script src="/static/js/home.js"></script>
 {% endblock %}

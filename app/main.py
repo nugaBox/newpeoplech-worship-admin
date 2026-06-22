@@ -9,8 +9,10 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from uvicorn.middleware.proxy_headers import ProxyHeadersMiddleware
 
+from app.auth_middleware import AuthMiddleware
+from app.auth_service import ensure_db, is_password_configured
 from app.config import settings as app_settings
-from app.routers import bulletin, favorites, outlines, server, settings
+from app.routers import auth, bulletin, favorites, outlines, quick_start, server, settings
 from app.server_control import mark_server_started
 
 ROOT_DIR = Path(__file__).resolve().parent.parent
@@ -20,6 +22,7 @@ FAVICON_ICO = FAVICON_DIR / "favicon.ico"
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    ensure_db()
     mark_server_started()
     yield
 
@@ -37,10 +40,14 @@ if app_settings.trust_proxy_headers:
         trusted_hosts=app_settings.forwarded_allow_ips,
     )
 
+app.add_middleware(AuthMiddleware)
+
+app.include_router(auth.router)
 app.include_router(bulletin.router)
 app.include_router(settings.router)
 app.include_router(server.router)
 app.include_router(favorites.router)
+app.include_router(quick_start.router)
 app.include_router(outlines.router)
 
 static_dir = ROOT_DIR / "static"
@@ -54,7 +61,27 @@ def _page(request: Request, name: str, title: str, nav: str) -> HTMLResponse:
     return templates.TemplateResponse(
         request=request,
         name=name,
-        context={"page_title": title, "active_nav": nav},
+        context={
+            "page_title": title,
+            "active_nav": nav,
+            "current_user": getattr(request.state, "user", None),
+        },
+    )
+
+
+@app.get("/login", response_class=HTMLResponse)
+async def login_page(request: Request) -> HTMLResponse:
+    password_configured = is_password_configured()
+    if getattr(request.state, "user", None) and password_configured:
+        next_url = request.query_params.get("next", "/")
+        return RedirectResponse(url=next_url, status_code=302)
+    return templates.TemplateResponse(
+        request=request,
+        name="login.html",
+        context={
+            "password_configured": password_configured,
+            "username": app_settings.admin_username,
+        },
     )
 
 

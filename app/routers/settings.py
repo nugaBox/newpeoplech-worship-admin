@@ -2,10 +2,21 @@
 
 from __future__ import annotations
 
-from fastapi import APIRouter
+import asyncio
+from pathlib import Path
+
+from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 
-from app.config import settings
+from app.engines.folder_picker import pick_path
+from app.path_settings import (
+    PATH_DEFINITIONS,
+    PATH_GROUP_LABELS,
+    get_resolved_path,
+    list_path_checks,
+    path_exists,
+    set_path,
+)
 from app.runtime_settings import (
     RunMode,
     RuntimeSettings,
@@ -22,10 +33,17 @@ class PathCheck(BaseModel):
     path: str
     exists: bool
     kind: str
+    group: str = "document"
+    group_label: str = ""
+    hint: str = ""
 
 
 class PathsResponse(BaseModel):
     paths: list[PathCheck]
+
+
+class PathUpdate(BaseModel):
+    path: str
 
 
 class RuntimeSettingsResponse(BaseModel):
@@ -44,28 +62,87 @@ class RuntimeSettingsUpdate(BaseModel):
     open_browser: bool = False
 
 
+def _to_path_check(row: dict[str, str | bool]) -> PathCheck:
+    return PathCheck(
+        key=str(row["key"]),
+        label=str(row["label"]),
+        path=str(row["path"]),
+        exists=bool(row["exists"]),
+        kind=str(row["kind"]),
+        group=str(row.get("group", "document")),
+        group_label=str(row.get("group_label", "")),
+        hint=str(row.get("hint", "")),
+    )
+
+
+def _initial_dir_for_key(key: str) -> str | None:
+    current = get_resolved_path(key)
+    kind = PATH_DEFINITIONS[key]["kind"]
+    if kind == "file":
+        if current.is_file():
+            return str(current.parent)
+        if current.parent.is_dir():
+            return str(current.parent)
+        return None
+    if current.is_dir():
+        return str(current)
+    if current.parent.is_dir():
+        return str(current.parent)
+    return None
+
+
 @router.get("/paths", response_model=PathsResponse)
 async def check_paths() -> PathsResponse:
-    checks = [
-        ("hwp_template", "주보 hwpx 템플릿", settings.hwp_template_path, "file"),
-        ("day_ppt_template", "주일낮예배 PPT 템플릿", settings.day_ppt_template_path, "file"),
-        ("hymn_ppt_dir", "찬송가 PPT 폴더", settings.hymn_ppt_dir, "dir"),
-        ("responsive_ppt_dir", "교독문 PPT 폴더", settings.responsive_ppt_dir, "dir"),
-        ("output_dir", "생성 파일 출력 폴더", settings.ensure_output_dir(), "dir"),
-    ]
-    paths: list[PathCheck] = []
-    for key, label, path, kind in checks:
-        exists = path.is_file() if kind == "file" else path.is_dir()
-        paths.append(
-            PathCheck(
-                key=key,
-                label=label,
-                path=str(path),
-                exists=exists,
-                kind=kind,
-            )
+    return PathsResponse(paths=[_to_path_check(row) for row in list_path_checks()])
+
+
+def _path_check_from_key(key: str, path: Path) -> PathCheck:
+    defn = PATH_DEFINITIONS[key]
+    group = defn["group"]
+    return PathCheck(
+        key=key,
+        label=defn["label"],
+        path=str(path),
+        exists=path_exists(key, path),
+        kind=defn["kind"],
+        group=group,
+        group_label=PATH_GROUP_LABELS[group],
+        hint=defn.get("hint", ""),
+    )
+
+
+@router.put("/paths/{key}", response_model=PathCheck)
+async def update_path(key: str, body: PathUpdate) -> PathCheck:
+    if key not in PATH_DEFINITIONS:
+        raise HTTPException(status_code=404, detail="경로 항목을 찾을 수 없습니다.")
+    try:
+        set_path(key, body.path)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+    return _path_check_from_key(key, get_resolved_path(key))
+
+
+@router.post("/paths/{key}/browse", response_model=PathCheck)
+async def browse_path(key: str) -> PathCheck:
+    if key not in PATH_DEFINITIONS:
+        raise HTTPException(status_code=404, detail="경로 항목을 찾을 수 없습니다.")
+
+    defn = PATH_DEFINITIONS[key]
+    try:
+        picked = await asyncio.to_thread(
+            pick_path,
+            kind=defn["kind"],
+            initial_dir=_initial_dir_for_key(key),
         )
-    return PathsResponse(paths=paths)
+    except OSError as exc:
+        raise HTTPException(status_code=500, detail=str(exc)) from exc
+
+    if not picked:
+        raise HTTPException(status_code=400, detail="선택이 취소되었습니다.")
+
+    set_path(key, picked)
+    return _path_check_from_key(key, Path(picked))
 
 
 @router.get("/runtime", response_model=RuntimeSettingsResponse)
@@ -98,4 +175,3 @@ async def update_runtime_settings(body: RuntimeSettingsUpdate) -> RuntimeSetting
         open_browser=updated.open_browser,
         reload_enabled=updated.is_development,
     )
-

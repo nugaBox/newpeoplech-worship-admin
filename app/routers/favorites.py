@@ -19,9 +19,10 @@ DATA_FILE = Path(__file__).resolve().parent.parent / "data" / "favorites.json"
 
 class FavoriteItem(BaseModel):
     id: str
-    type: Literal["folder", "file", "separator"]
+    type: Literal["folder", "file", "heading", "separator"]
     name: str
     path: str = ""
+    category: Literal["folder", "file"] = "folder"
 
 
 class FavoritesResponse(BaseModel):
@@ -29,15 +30,17 @@ class FavoritesResponse(BaseModel):
 
 
 class FavoriteItemCreate(BaseModel):
-    type: Literal["folder", "file", "separator"] = "folder"
+    type: Literal["folder", "file", "heading", "separator"] = "folder"
     name: str
     path: str = ""
+    category: Literal["folder", "file"] = "folder"
 
 
 class FavoriteItemUpdate(BaseModel):
-    type: Literal["folder", "file", "separator"] | None = None
+    type: Literal["folder", "file", "heading", "separator"] | None = None
     name: str | None = None
     path: str | None = None
+    category: Literal["folder", "file"] | None = None
 
 
 class OpenPathRequest(BaseModel):
@@ -50,10 +53,23 @@ class ActionResult(BaseModel):
     message: str
 
 
+def _normalize_item(item: dict) -> dict:
+    """구분선·카테고리 없는 구 데이터 호환."""
+    if item.get("type") == "separator":
+        item = {**item, "type": "heading", "name": item.get("name") or "-"}
+    if item.get("type") == "file":
+        item.setdefault("category", "file")
+    else:
+        item.setdefault("category", "folder")
+    return item
+
+
 def _load() -> dict:
     if not DATA_FILE.is_file():
         return {"items": []}
-    return json.loads(DATA_FILE.read_text(encoding="utf-8"))
+    data = json.loads(DATA_FILE.read_text(encoding="utf-8"))
+    data["items"] = [_normalize_item(item) for item in data.get("items", [])]
+    return data
 
 
 def _save(data: dict) -> None:
@@ -113,8 +129,8 @@ async def open_favorite(body: OpenPathRequest) -> ActionResult:
         match = next((i for i in data.get("items", []) if i["id"] == body.id), None)
         if not match:
             raise HTTPException(status_code=404, detail="항목을 찾을 수 없습니다.")
-        if match["type"] == "separator":
-            raise HTTPException(status_code=400, detail="구분선은 열 수 없습니다.")
+        if match["type"] in ("separator", "heading"):
+            raise HTTPException(status_code=400, detail="소제목은 열 수 없습니다.")
         path_str = match["path"]
 
     if not path_str:

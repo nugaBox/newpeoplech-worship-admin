@@ -20,8 +20,49 @@ def extract_number(value: str) -> str:
     return match.group(1)
 
 
-def pad_hymn_number(number: str) -> str:
-    return str(int(number)).zfill(3)
+def pad_number(number: str | int) -> str:
+    """숫자를 3자리 문자열로 (1 → 001)."""
+    return str(int(str(number).strip())).zfill(3)
+
+
+def validate_hymn_number(number: str | int) -> str:
+    """찬송가 1~645장 검증 후 3자리."""
+    value = int(str(number).strip())
+    if value < 1 or value > 645:
+        raise FileMatchError("찬송가 장 번호는 1~645 사이여야 합니다.")
+    return str(value).zfill(3)
+
+
+def hymn_file_prefix(hymn_input: str | int) -> str:
+    """'1', '1장' → '찬001_'."""
+    number = validate_hymn_number(extract_number(str(hymn_input)))
+    return f"찬{number}_"
+
+
+SHOW_EXTENSIONS = (".ppsx", ".pps", ".pptx", ".ppt")
+
+
+def _pick_by_extension(
+    candidates: list[Path],
+    extensions: tuple[str, ...],
+    *,
+    label: str = "파일",
+) -> Path:
+    for ext in extensions:
+        group = [p for p in candidates if p.suffix.lower() == ext]
+        if len(group) == 1:
+            return group[0]
+        if len(group) > 1:
+            raise FileMatchError(
+                f"{label}이(가) {len(group)}개 있습니다. 하나를 선택해 주세요.",
+                [p.name for p in group],
+            )
+    if len(candidates) == 1:
+        return candidates[0]
+    raise FileMatchError(
+        f"{label}이(가) {len(candidates)}개 있습니다. 하나를 선택해 주세요.",
+        [p.name for p in candidates],
+    )
 
 
 def find_hymn_file(directory: Path, hymn_input: str) -> Path:
@@ -29,8 +70,7 @@ def find_hymn_file(directory: Path, hymn_input: str) -> Path:
     if not directory.is_dir():
         raise FileMatchError(f"찬송가 PPT 폴더를 찾을 수 없습니다: {directory}")
 
-    number = pad_hymn_number(extract_number(hymn_input))
-    prefix = f"찬{number}_"
+    prefix = hymn_file_prefix(hymn_input)
     candidates = sorted(
         p for p in directory.iterdir() if p.is_file() and p.name.startswith(prefix)
     )
@@ -47,12 +87,59 @@ def find_hymn_file(directory: Path, hymn_input: str) -> Path:
     return candidates[0]
 
 
+def find_hymn_slideshow_file(directory: Path, hymn_input: str) -> Path:
+    """찬송가 슬라이드쇼 폴더에서 ppsx/pptx 파일 검색 (.ppsx 우선)."""
+    if not directory.is_dir():
+        raise FileMatchError(f"찬송가 슬라이드쇼 폴더를 찾을 수 없습니다: {directory}")
+
+    prefix = hymn_file_prefix(hymn_input)
+    candidates = sorted(
+        p
+        for p in directory.iterdir()
+        if p.is_file()
+        and p.name.startswith(prefix)
+        and p.suffix.lower() in SHOW_EXTENSIONS
+    )
+    if not candidates:
+        raise FileMatchError(
+            f"찬송가 슬라이드쇼 폴더에 '{prefix}'로 시작하는 ppsx/pptx 파일이 없습니다.",
+            [],
+        )
+    return _pick_by_extension(candidates, SHOW_EXTENSIONS, label="찬송가")
+
+
+def find_responsive_slideshow_file(directory: Path, number_input: str) -> Path:
+    """교독문 슬라이드쇼 폴더에서 ppsx/pptx 파일 검색 (.ppsx 우선)."""
+    if not directory.is_dir():
+        raise FileMatchError(f"교독문 슬라이드쇼 폴더를 찾을 수 없습니다: {directory}")
+
+    number = pad_number(extract_number(number_input))
+    prefixes = [
+        f"교독문{number}_",
+        f"교{number}_",
+        f"교독{number}_",
+    ]
+    candidates = sorted(
+        p
+        for p in directory.iterdir()
+        if p.is_file()
+        and p.suffix.lower() in SHOW_EXTENSIONS
+        and any(p.name.startswith(prefix) for prefix in prefixes)
+    )
+    if not candidates:
+        raise FileMatchError(
+            f"교독문 슬라이드쇼 폴더에 '{number_input}'(번호 {number})에 해당하는 ppsx/pptx 파일이 없습니다.",
+            [],
+        )
+    return _pick_by_extension(candidates, SHOW_EXTENSIONS, label="교독문")
+
+
 def find_responsive_file(directory: Path, number_input: str) -> Path:
     """교독문 PPT 폴더에서 '교독문{3자리}_' 접두로 파일 검색."""
     if not directory.is_dir():
         raise FileMatchError(f"교독문 PPT 폴더를 찾을 수 없습니다: {directory}")
 
-    number = pad_hymn_number(extract_number(number_input))
+    number = pad_number(extract_number(number_input))
     prefixes = [
         f"교독문{number}_",
         f"교{number}_",
